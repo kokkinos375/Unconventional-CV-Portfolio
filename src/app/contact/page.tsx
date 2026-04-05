@@ -25,7 +25,7 @@ export default function ContactPage() {
 
             <div>
               <p className="text-[0.6rem] uppercase tracking-[0.3em] text-cyan-500/60 mb-1">Base Operations</p>
-              <p className="text-stone-300">Τριπόλεως 48, Ελληνικό Αττικής</p>
+              <p className="text-stone-300">Ελληνικό Αττικής</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

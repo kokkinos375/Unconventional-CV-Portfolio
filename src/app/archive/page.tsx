@@ -1,9 +1,7 @@
 "use client";
 
-import { RoomShell } from "@/components/villa/RoomShell";
 import { motion } from "framer-motion";
-
-
+import { RoomShell } from "@/components/villa/RoomShell";
 
 const TECH_STACK = ["C++", "C", "Python", "Java", "SQL", "HTML", "CSS"];
 
@@ -13,7 +11,7 @@ export default function SystemSpecificationsPage() {
       title="System Specifications" 
       description="Hardware architecture, active software modules, and communication protocols."
     >
-      <div className="mt-12 space-y-10 font-mono">
+      <div className="mt-12 space-y-10 font-mono pb-10">
         
         {/* 1. Main Processor (Education) */}
         <motion.section 
@@ -82,6 +80,29 @@ export default function SystemSpecificationsPage() {
                 VERIFIED
               </span>
               <span className="text-zinc-500">// Global Operations Ready</span>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* 4. Emergency Override (Lifeguard) */}
+        <motion.section 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="relative border-l-2 border-rose-500/50 pl-6"
+        >
+          <div className="absolute -left-[5px] top-0 h-2 w-2 rounded-full bg-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.8)]" />
+          <h2 className="text-[0.65rem] uppercase tracking-[0.35em] text-rose-500/80 mb-2">
+            [ Emergency Override Protocol ]
+          </h2>
+          <div className="bg-[#0f0e0d] border border-white/5 p-5 rounded-sm shadow-inner">
+            <h3 className="text-lg text-stone-100 tracking-wide">Professional Lifeguard Certification</h3>
+            <p className="mt-1 text-sm text-zinc-400">Certified by PASHNA</p>
+            <div className="mt-4 flex items-center gap-3 text-xs">
+              <span className="px-2 py-1 bg-rose-500/10 text-rose-400 border border-rose-500/30 rounded-sm">
+                LICENSED
+              </span>
+              <span className="text-zinc-500">// Rescue & First Aid Ready</span>
             </div>
           </div>
         </motion.section>
