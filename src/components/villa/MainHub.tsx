@@ -12,7 +12,7 @@ const rooms = [
   {
     href: "/archive",
     title: "System Specifications",
-    subtitle: "Education · technical stack",
+    subtitle: "Education · Tech · Certifications",
     planRef: "PLN — A-01",
   },
   {
@@ -24,7 +24,7 @@ const rooms = [
   {
     href: "/trophy-room",
     title: "Trophy Room",
-    subtitle: "Milestones & work",
+    subtitle: "Milestones & Work Experience",
     planRef: "PLN — C-03",
   },
   {
@@ -146,11 +146,12 @@ export function MainHub() {
 
   return (
     <motion.div
-      className="fixed inset-0 z-0 flex min-h-full flex-col overflow-hidden bg-[#0a0908]"
+      className="fixed inset-0 z-0 overflow-hidden bg-[#0a0908]"
       initial={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.1 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
     >
+      {/* Backgrounds stay fixed */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_70%_at_50%_110%,rgba(28,26,24,0.85),transparent_58%),radial-gradient(ellipse_60%_45%_at_15%_25%,rgba(55,50,46,0.35),transparent_55%),radial-gradient(ellipse_50%_40%_at_85%_20%,rgba(42,38,36,0.3),transparent_50%)]"
@@ -170,42 +171,47 @@ export function MainHub() {
 
       <ParallaxHeroName />
 
-      <header className="relative z-[3] border-b border-white/[0.06] px-8 py-10 md:px-14">
-        <p className="font-mono text-[0.6rem] uppercase tracking-[0.35em] text-cyan-500/45">
-          System · Interior
-        </p>
-        <p className="mt-2 text-[0.7rem] font-medium uppercase tracking-[0.32em] text-zinc-500">
-          {SITE_OWNER_NAME}
-        </p>
-        <h2 className="mt-2 font-display text-2xl font-light tracking-[0.02em] text-stone-100 md:text-3xl">
-          An Unconventional CV
-        </h2>
-        <p className="mt-2 max-w-md text-sm text-zinc-500">
-          A high-performance portfolio experience, rendered as an interactive space.
-        </p>
-      </header>
+      {/* Νέο Scrollable Container για το περιεχόμενο */}
+      <div className="relative z-[3] h-full w-full overflow-y-auto overflow-x-hidden">
+        <div className="flex min-h-full flex-col">
+          <header className="border-b border-white/[0.06] px-8 py-10 md:px-14">
+            <p className="font-mono text-[0.6rem] uppercase tracking-[0.35em] text-cyan-500/45">
+              System · Interior
+            </p>
+            <p className="mt-2 text-[0.7rem] font-medium uppercase tracking-[0.32em] text-zinc-500">
+              {SITE_OWNER_NAME}
+            </p>
+            <h2 className="mt-2 font-display text-2xl font-light tracking-[0.02em] text-stone-100 md:text-3xl">
+              An Unconventional CV
+            </h2>
+            <p className="mt-2 max-w-md text-sm text-zinc-500">
+              A high-performance portfolio experience, rendered as an interactive space.
+            </p>
+          </header>
 
-      <main className="relative z-[3] flex flex-1 flex-col justify-center px-6 py-10 md:px-14">
-        <div className="mx-auto w-full max-w-5xl [perspective:1600px]">
-          <div className="mx-auto grid w-full grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:gap-7 [transform-style:preserve-3d]">
-            {rooms.map((room, i) => (
-              <BlueprintRoomCard
-                key={room.href}
-                href={room.href}
-                title={room.title}
-                subtitle={room.subtitle}
-                refLabel={room.planRef}
-                index={i}
-                reduceMotion={reduceMotion}
-              />
-            ))}
-          </div>
+          <main className="flex flex-1 flex-col justify-center px-6 py-10 md:px-14">
+            <div className="mx-auto w-full max-w-5xl [perspective:1600px]">
+              <div className="mx-auto grid w-full grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:gap-7 [transform-style:preserve-3d]">
+                {rooms.map((room, i) => (
+                  <BlueprintRoomCard
+                    key={room.href}
+                    href={room.href}
+                    title={room.title}
+                    subtitle={room.subtitle}
+                    refLabel={room.planRef}
+                    index={i}
+                    reduceMotion={reduceMotion}
+                  />
+                ))}
+              </div>
+            </div>
+          </main>
+
+          <footer className="border-t border-white/[0.06] px-8 py-6 text-center font-mono text-[0.58rem] uppercase tracking-[0.28em] text-zinc-600 md:px-14">
+            {SITE_OWNER_NAME} · An Unconventional CV · Portfolio
+          </footer>
         </div>
-      </main>
-
-      <footer className="relative z-[3] border-t border-white/[0.06] px-8 py-6 text-center font-mono text-[0.58rem] uppercase tracking-[0.28em] text-zinc-600 md:px-14">
-        {SITE_OWNER_NAME} · An Unconventional CV · Portfolio
-      </footer>
+      </div>
     </motion.div>
   );
 }
