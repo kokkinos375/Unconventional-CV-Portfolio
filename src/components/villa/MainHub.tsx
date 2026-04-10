@@ -264,8 +264,8 @@ export function MainHub() {
   // Keyboard shortcut listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Toggle terminal with Backtick (`) or Tilde (~)
-      if (e.key === "`" || e.key === "~") {
+      // Toggle terminal using the physical key (Works in both EN and GR layouts)
+      if (e.code === "Backquote") {
         e.preventDefault();
         setIsTerminalOpen((prev) => !prev);
       }
