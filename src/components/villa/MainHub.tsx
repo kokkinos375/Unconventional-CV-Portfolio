@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 
 import { SITE_OWNER_NAME, SITE_OWNER_NAME_HERO } from "@/lib/site";
 
@@ -24,7 +24,7 @@ const rooms = [
   {
     href: "/trophy-room",
     title: "Trophy Room",
-    subtitle: "Milestones & Work Experience",
+    subtitle: "Milestones & work",
     planRef: "PLN — C-03",
   },
   {
@@ -34,6 +34,122 @@ const rooms = [
     planRef: "PLN — D-04",
   },
 ] as const;
+
+// ==========================================
+// EASTER EGG: HIDDEN TERMINAL COMPONENT
+// ==========================================
+function HiddenTerminal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const [input, setInput] = useState("");
+  const [history, setHistory] = useState<{ type: "cmd" | "res"; text: string }[]>([
+    { type: "res", text: "NKUA OS [Version 1.0.0]" },
+    { type: "res", text: "(c) 2026 Michail Kokkinos. All rights reserved." },
+    { type: "res", text: "Type 'help' to see available commands." },
+  ]);
+  const endOfTerminalRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus when opened
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 100);
+    }
+  }, [isOpen]);
+
+  // Auto-scroll to bottom
+  useEffect(() => {
+    endOfTerminalRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [history]);
+
+  const handleCommand = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const cmd = input.trim().toLowerCase();
+    const newHistory = [...history, { type: "cmd" as const, text: input }];
+
+    switch (cmd) {
+      case "help":
+        newHistory.push({ type: "res", text: "> AVAILABLE COMMANDS:" });
+        newHistory.push({ type: "res", text: "  help      - Show this message" });
+        newHistory.push({ type: "res", text: "  skills    - Display technical stack" });
+        newHistory.push({ type: "res", text: "  sudo hire michail - Execute recruitment protocol" });
+        newHistory.push({ type: "res", text: "  clear     - Clear terminal history" });
+        newHistory.push({ type: "res", text: "  exit      - Close terminal connection" });
+        break;
+      case "skills":
+        newHistory.push({ type: "res", text: "> ACTIVE MODULES: C++, C, Python, Java, SQL, HTML, CSS" });
+        newHistory.push({ type: "res", text: "> RATING: Highly proficient. Ready for deployment." });
+        break;
+      case "sudo hire michail":
+        newHistory.push({ type: "res", text: "> [SECURITY BREACH]... just kidding." });
+        newHistory.push({ type: "res", text: "> ACCESS GRANTED." });
+        newHistory.push({ type: "res", text: "> Initiating recruitment protocol..." });
+        newHistory.push({ type: "res", text: "> Please direct all offers to: michael.kokkinos375@gmail.com" });
+        break;
+      case "clear":
+        setHistory([]);
+        setInput("");
+        return;
+      case "exit":
+        onClose();
+        setInput("");
+        return;
+      default:
+        newHistory.push({ type: "res", text: `> Command not found: ${cmd}. Type 'help' for options.` });
+    }
+
+    setHistory(newHistory);
+    setInput("");
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: "-100%" }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: "-100%" }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="fixed top-0 left-0 right-0 h-[45vh] z-[100] bg-[#050505]/95 backdrop-blur-md border-b-2 border-cyan-500/50 shadow-[0_10px_40px_rgba(0,229,255,0.15)] font-mono text-sm sm:text-base text-cyan-400 overflow-hidden flex flex-col"
+        >
+          {/* Terminal Header */}
+          <div className="bg-cyan-900/30 border-b border-cyan-500/30 px-4 py-2 flex justify-between items-center text-xs text-cyan-300/70">
+            <span>TERMINAL_OVERRIDE // NKUA_SYSTEM</span>
+            <button onClick={onClose} className="hover:text-cyan-100 transition-colors">
+              [X] CLOSE
+            </button>
+          </div>
+
+          {/* Terminal Body */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2">
+            {history.map((line, i) => (
+              <div key={i} className={line.type === "cmd" ? "text-cyan-200" : "text-cyan-500/80"}>
+                {line.type === "cmd" ? <span className="text-emerald-400 mr-2">guest@portfolio:~$</span> : null}
+                {line.text}
+              </div>
+            ))}
+            
+            {/* Input Line */}
+            <form onSubmit={handleCommand} className="flex items-center pt-2">
+              <span className="text-emerald-400 mr-2">guest@portfolio:~$</span>
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="flex-1 bg-transparent outline-none border-none text-cyan-200"
+                autoComplete="off"
+                spellCheck="false"
+              />
+            </form>
+            <div ref={endOfTerminalRef} />
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+// ==========================================
 
 function ParallaxHeroName() {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -143,6 +259,25 @@ function BlueprintRoomCard({
 
 export function MainHub() {
   const reduceMotion = useReducedMotion();
+  const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+
+  // Keyboard shortcut listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Toggle terminal with Backtick (`) or Tilde (~)
+      if (e.key === "`" || e.key === "~") {
+        e.preventDefault();
+        setIsTerminalOpen((prev) => !prev);
+      }
+      // Close with Escape
+      if (e.key === "Escape") {
+        setIsTerminalOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <motion.div
@@ -151,6 +286,8 @@ export function MainHub() {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
     >
+      <HiddenTerminal isOpen={isTerminalOpen} onClose={() => setIsTerminalOpen(false)} />
+
       {/* Backgrounds stay fixed */}
       <div
         aria-hidden
@@ -171,12 +308,15 @@ export function MainHub() {
 
       <ParallaxHeroName />
 
-      {/* Νέο Scrollable Container για το περιεχόμενο */}
+      {/* Scrollable Container */}
       <div className="relative z-[3] h-full w-full overflow-y-auto overflow-x-hidden">
         <div className="flex min-h-full flex-col">
           <header className="border-b border-white/[0.06] px-8 py-10 md:px-14">
-            <p className="font-mono text-[0.6rem] uppercase tracking-[0.35em] text-cyan-500/45">
-              System · Interior
+            <p className="font-mono text-[0.6rem] uppercase tracking-[0.35em] text-cyan-500/45 flex items-center gap-2">
+              System · Interior 
+              <span className="hidden sm:inline-block text-cyan-700 ml-2 animate-pulse">
+                [ Press ` to open terminal ]
+              </span>
             </p>
             <p className="mt-2 text-[0.7rem] font-medium uppercase tracking-[0.32em] text-zinc-500">
               {SITE_OWNER_NAME}
