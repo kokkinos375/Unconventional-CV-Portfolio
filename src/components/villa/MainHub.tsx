@@ -36,9 +36,77 @@ const rooms = [
 ] as const;
 
 // ==========================================
-// EASTER EGG: HIDDEN TERMINAL COMPONENT
+// EASTER EGG 1: THE MATRIX RAIN CANVAS
 // ==========================================
-function HiddenTerminal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+function MatrixRain() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const katakana = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレゲゼデベペオォコソトノホモヨョロゴゾドボポヴッン";
+    const latin = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const nums = "0123456789";
+    const alphabet = katakana + latin + nums;
+
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops: number[] = [];
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+
+    const draw = () => {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#0F0";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    };
+
+    const interval = setInterval(draw, 33);
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 opacity-50" />;
+}
+
+// ==========================================
+// EASTER EGG 2: HIDDEN TERMINAL
+// ==========================================
+function HiddenTerminal({ 
+  isOpen, 
+  onClose, 
+  matrixMode, 
+  toggleMatrix 
+}: { 
+  isOpen: boolean; 
+  onClose: () => void;
+  matrixMode: boolean;
+  toggleMatrix: (state: boolean) => void;
+}) {
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<{ type: "cmd" | "res"; text: string }[]>([
     { type: "res", text: "NKUA OS [Version 1.0.0]" },
@@ -48,14 +116,10 @@ function HiddenTerminal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
   const endOfTerminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-focus when opened
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 100);
-    }
+    if (isOpen) setTimeout(() => inputRef.current?.focus(), 100);
   }, [isOpen]);
 
-  // Auto-scroll to bottom
   useEffect(() => {
     endOfTerminalRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [history]);
@@ -70,11 +134,13 @@ function HiddenTerminal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
     switch (cmd) {
       case "help":
         newHistory.push({ type: "res", text: "> AVAILABLE COMMANDS:" });
-        newHistory.push({ type: "res", text: "  help      - Show this message" });
-        newHistory.push({ type: "res", text: "  skills    - Display technical stack" });
+        newHistory.push({ type: "res", text: "  help            - Show this message" });
+        newHistory.push({ type: "res", text: "  skills          - Display technical stack" });
         newHistory.push({ type: "res", text: "  sudo hire michail - Execute recruitment protocol" });
-        newHistory.push({ type: "res", text: "  clear     - Clear terminal history" });
-        newHistory.push({ type: "res", text: "  exit      - Close terminal connection" });
+        newHistory.push({ type: "res", text: "  execute matrix  - [REDACTED]" });
+        newHistory.push({ type: "res", text: "  exit matrix     - Restore system UI" });
+        newHistory.push({ type: "res", text: "  clear           - Clear terminal history" });
+        newHistory.push({ type: "res", text: "  exit            - Close terminal connection" });
         break;
       case "skills":
         newHistory.push({ type: "res", text: "> ACTIVE MODULES: C++, C, Python, Java, SQL, HTML, CSS" });
@@ -85,6 +151,23 @@ function HiddenTerminal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
         newHistory.push({ type: "res", text: "> ACCESS GRANTED." });
         newHistory.push({ type: "res", text: "> Initiating recruitment protocol..." });
         newHistory.push({ type: "res", text: "> Please direct all offers to: michael.kokkinos375@gmail.com" });
+        break;
+      case "execute matrix":
+        if (matrixMode) {
+          newHistory.push({ type: "res", text: "> Matrix protocol is already running." });
+        } else {
+          toggleMatrix(true);
+          newHistory.push({ type: "res", text: "> Waking up... Follow the white rabbit." });
+          newHistory.push({ type: "res", text: "> SYSTEM OVERRIDDEN." });
+        }
+        break;
+      case "exit matrix":
+        if (!matrixMode) {
+          newHistory.push({ type: "res", text: "> System is already in normal operation mode." });
+        } else {
+          toggleMatrix(false);
+          newHistory.push({ type: "res", text: "> Matrix protocol terminated. UI Restored." });
+        }
         break;
       case "clear":
         setHistory([]);
@@ -102,6 +185,10 @@ function HiddenTerminal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
     setInput("");
   };
 
+  const themeColor = matrixMode ? "text-[#00FF41]" : "text-cyan-400";
+  const dimColor = matrixMode ? "text-[#00FF41]/70" : "text-cyan-500/80";
+  const highlightColor = matrixMode ? "text-white" : "text-emerald-400";
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -110,12 +197,12 @@ function HiddenTerminal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: "-100%" }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed top-0 left-0 right-0 h-[45vh] z-[100] bg-[#050505]/95 backdrop-blur-md border-b-2 border-cyan-500/50 shadow-[0_10px_40px_rgba(0,229,255,0.15)] font-mono text-sm sm:text-base text-cyan-400 overflow-hidden flex flex-col"
+          className={`fixed top-0 left-0 right-0 h-[45vh] z-[100] bg-[#050505]/95 backdrop-blur-md border-b-2 ${matrixMode ? 'border-[#00FF41]/50' : 'border-cyan-500/50'} shadow-lg font-mono text-sm sm:text-base ${themeColor} overflow-hidden flex flex-col transition-colors duration-500`}
         >
           {/* Terminal Header */}
-          <div className="bg-cyan-900/30 border-b border-cyan-500/30 px-4 py-2 flex justify-between items-center text-xs text-cyan-300/70">
-            <span>TERMINAL_OVERRIDE // NKUA_SYSTEM</span>
-            <button onClick={onClose} className="hover:text-cyan-100 transition-colors">
+          <div className={`bg-black/30 border-b ${matrixMode ? 'border-[#00FF41]/30' : 'border-cyan-500/30'} px-4 py-2 flex justify-between items-center text-xs ${dimColor}`}>
+            <span>TERMINAL_OVERRIDE // {matrixMode ? 'MATRIX_ACTIVE' : 'NKUA_SYSTEM'}</span>
+            <button onClick={onClose} className="hover:text-white transition-colors">
               [X] CLOSE
             </button>
           </div>
@@ -123,21 +210,21 @@ function HiddenTerminal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
           {/* Terminal Body */}
           <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2">
             {history.map((line, i) => (
-              <div key={i} className={line.type === "cmd" ? "text-cyan-200" : "text-cyan-500/80"}>
-                {line.type === "cmd" ? <span className="text-emerald-400 mr-2">guest@portfolio:~$</span> : null}
+              <div key={i} className={line.type === "cmd" ? themeColor : dimColor}>
+                {line.type === "cmd" ? <span className={`${highlightColor} mr-2`}>guest@portfolio:~$</span> : null}
                 {line.text}
               </div>
             ))}
             
             {/* Input Line */}
             <form onSubmit={handleCommand} className="flex items-center pt-2">
-              <span className="text-emerald-400 mr-2">guest@portfolio:~$</span>
+              <span className={`${highlightColor} mr-2`}>guest@portfolio:~$</span>
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="flex-1 bg-transparent outline-none border-none text-cyan-200"
+                className={`flex-1 bg-transparent outline-none border-none ${themeColor}`}
                 autoComplete="off"
                 spellCheck="false"
               />
@@ -240,16 +327,16 @@ function BlueprintRoomCard({
         <span className="pointer-events-none absolute bottom-3 left-3 h-4 w-4 border-b border-l border-cyan-400/45" />
         <span className="pointer-events-none absolute bottom-3 right-3 h-4 w-4 border-b border-r border-cyan-400/45" />
 
-        <p className="relative font-mono text-[0.58rem] uppercase tracking-[0.2em] text-cyan-500/50">
+        <p className="relative font-mono text-[0.58rem] uppercase tracking-[0.2em] opacity-70">
           {refLabel}
         </p>
         <div className="relative mt-1">
-          <h3 className="font-display text-xl font-light tracking-wide text-stone-100 md:text-2xl">
+          <h3 className="font-display text-xl font-light tracking-wide md:text-2xl">
             {title}
           </h3>
-          <p className="mt-1 text-sm text-zinc-500">{subtitle}</p>
+          <p className="mt-1 text-sm opacity-60">{subtitle}</p>
         </div>
-        <span className="relative mt-4 text-[0.62rem] font-medium uppercase tracking-[0.28em] text-zinc-600 transition-colors group-hover:text-cyan-400/70">
+        <span className="relative mt-4 text-[0.62rem] font-medium uppercase tracking-[0.28em] opacity-70 transition-opacity group-hover:opacity-100">
           Open →
         </span>
       </Link>
@@ -260,19 +347,15 @@ function BlueprintRoomCard({
 export function MainHub() {
   const reduceMotion = useReducedMotion();
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
+  const [matrixMode, setMatrixMode] = useState(false);
 
-  // Keyboard shortcut listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Toggle terminal using the physical key (Works in both EN and GR layouts)
       if (e.code === "Backquote") {
         e.preventDefault();
         setIsTerminalOpen((prev) => !prev);
       }
-      // Close with Escape
-      if (e.key === "Escape") {
-        setIsTerminalOpen(false);
-      }
+      if (e.key === "Escape") setIsTerminalOpen(false);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -281,50 +364,56 @@ export function MainHub() {
 
   return (
     <motion.div
-      className="fixed inset-0 z-0 overflow-hidden bg-[#0a0908]"
+      // Το "μαγικό" class: Αν είναι matrixMode, ΚΑΘΕ κείμενο, περίγραμμα και SVG γίνεται Πράσινο!
+      className={`fixed inset-0 z-0 overflow-hidden bg-[#0a0908] transition-colors duration-1000 ${
+        matrixMode ? '[&_*]:!text-[#00FF41] [&_*]:!border-[#00FF41]/40 [&_*]:shadow-none' : ''
+      }`}
       initial={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.1 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
     >
-      <HiddenTerminal isOpen={isTerminalOpen} onClose={() => setIsTerminalOpen(false)} />
-
-      {/* Backgrounds stay fixed */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_70%_at_50%_110%,rgba(28,26,24,0.85),transparent_58%),radial-gradient(ellipse_60%_45%_at_15%_25%,rgba(55,50,46,0.35),transparent_55%),radial-gradient(ellipse_50%_40%_at_85%_20%,rgba(42,38,36,0.3),transparent_50%)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,transparent_28%,rgba(0,0,0,0.55)_100%)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-soft-light animate-glitch-flicker bg-[repeating-linear-gradient(180deg,transparent,transparent_3px,rgba(0,255,255,0.12)_3px,rgba(0,255,255,0.12)_6px)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-overlay bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.55%22/%3E%3C/svg%3E')]"
+      <HiddenTerminal 
+        isOpen={isTerminalOpen} 
+        onClose={() => setIsTerminalOpen(false)} 
+        matrixMode={matrixMode}
+        toggleMatrix={setMatrixMode}
       />
 
-      <ParallaxHeroName />
+      {/* Dynamic Backgrounds */}
+      {matrixMode ? (
+        <MatrixRain />
+      ) : (
+        <>
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_70%_at_50%_110%,rgba(28,26,24,0.85),transparent_58%),radial-gradient(ellipse_60%_45%_at_15%_25%,rgba(55,50,46,0.35),transparent_55%),radial-gradient(ellipse_50%_40%_at_85%_20%,rgba(42,38,36,0.3),transparent_50%)]" />
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,transparent_28%,rgba(0,0,0,0.55)_100%)]" />
+          <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-soft-light animate-glitch-flicker bg-[repeating-linear-gradient(180deg,transparent,transparent_3px,rgba(0,255,255,0.12)_3px,rgba(0,255,255,0.12)_6px)]" />
+          <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.07] mix-blend-overlay bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.55%22/%3E%3C/svg%3E')]" />
+        </>
+      )}
+
+      {!matrixMode && <ParallaxHeroName />}
 
       {/* Scrollable Container */}
       <div className="relative z-[3] h-full w-full overflow-y-auto overflow-x-hidden">
         <div className="flex min-h-full flex-col">
           <header className="border-b border-white/[0.06] px-8 py-10 md:px-14">
-            <p className="font-mono text-[0.6rem] uppercase tracking-[0.35em] text-cyan-500/45 flex items-center gap-2">
+            <p 
+              className={`font-mono text-[0.6rem] uppercase tracking-[0.35em] ${matrixMode ? '' : 'text-cyan-500/45'} flex items-center gap-2 cursor-pointer`}
+              onClick={() => setIsTerminalOpen((prev) => !prev)}
+            >
               System · Interior 
-              <span className="hidden sm:inline-block text-cyan-700 ml-2 animate-pulse">
-                [ Press ` to open terminal ]
+              <span className={`${matrixMode ? '' : 'text-cyan-700'} ml-2 animate-pulse`}>
+                <span className="hidden sm:inline">[ Press ` to open terminal ]</span>
+                <span className="sm:hidden">[ Tap here to open terminal ]</span>
               </span>
             </p>
-            <p className="mt-2 text-[0.7rem] font-medium uppercase tracking-[0.32em] text-zinc-500">
+            <p className={`mt-2 text-[0.7rem] font-medium uppercase tracking-[0.32em] ${matrixMode ? '' : 'text-zinc-500'}`}>
               {SITE_OWNER_NAME}
             </p>
-            <h2 className="mt-2 font-display text-2xl font-light tracking-[0.02em] text-stone-100 md:text-3xl">
+            <h2 className={`mt-2 font-display text-2xl font-light tracking-[0.02em] ${matrixMode ? '' : 'text-stone-100'} md:text-3xl`}>
               An Unconventional CV
             </h2>
-            <p className="mt-2 max-w-md text-sm text-zinc-500">
+            <p className={`mt-2 max-w-md text-sm ${matrixMode ? '' : 'text-zinc-500'}`}>
               A high-performance portfolio experience, rendered as an interactive space.
             </p>
           </header>
@@ -347,7 +436,7 @@ export function MainHub() {
             </div>
           </main>
 
-          <footer className="border-t border-white/[0.06] px-8 py-6 text-center font-mono text-[0.58rem] uppercase tracking-[0.28em] text-zinc-600 md:px-14">
+          <footer className={`border-t border-white/[0.06] px-8 py-6 text-center font-mono text-[0.58rem] uppercase tracking-[0.28em] ${matrixMode ? '' : 'text-zinc-600'} md:px-14`}>
             {SITE_OWNER_NAME} · An Unconventional CV · Portfolio
           </footer>
         </div>
