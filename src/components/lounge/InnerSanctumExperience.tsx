@@ -9,92 +9,130 @@ import { INNER_SANCTUM_CV } from "@/lib/cvText";
 import { SITE_OWNER_NAME, SITE_OWNER_NAME_HERO } from "@/lib/site";
 
 const PROFILE_IMAGE_SRC = "/personal/IMG_5448.jpeg";
+const AMANZOE_BG_SRC = "/personal/ancient.greek.webp"; 
 
 const LAPTOP_LINES = [
   SITE_OWNER_NAME_HERO,
-  "// NKUA CS STUDENT //",
-  "[ CERTIFICATION ]: C2 ENGLISH PROFICIENCY (ECPE / Univ. of Michigan) // STATUS: ACTIVE",
-  "PORTFOLIO_OS",
+  "// OPERATOR STATUS: ONLINE //",
+  "[ MISSION ]: FULL-STACK DEVELOPMENT & ALGORITHMS",
+  "EXTRACTING_CV_DATA...",
 ] as const;
 
-const MEDALS = [
+const ENDURANCE_METRICS = [
   {
     id: "m1",
-    tone: "bronze" as const,
-    title: "3rd Place",
-    detail: "4×100m Mixed · National 2019",
+    tone: "amber",
+    title: "National Rank: #3",
+    detail: "4×100m Mixed Relay // 2019",
+    category: "[ SPRINT PROTOCOL ]"
   },
   {
     id: "m2",
-    tone: "bronze" as const,
-    title: "3rd Place",
-    detail: "4×200m Free · National 2019",
+    tone: "amber",
+    title: "National Rank: #3",
+    detail: "4×200m Freestyle // 2019",
+    category: "[ AQUATIC PROTOCOL ]"
   },
   {
     id: "m3",
-    tone: "gold" as const,
-    title: "1st Place",
-    detail: "50m Butterfly · Tzelateia 2022",
+    tone: "gold",
+    title: "Tournament Rank: #1",
+    detail: "50m Butterfly // Tzelateia 2022",
+    category: "[ ELITE AQUATIC ]"
   },
 ];
 
-function MedalIconSimple({ tone, uid }: { tone: "bronze" | "gold"; uid: string }) {
-  const gid = `medal-shine-${uid}`;
-  const stroke = tone === "gold" ? "#d4a017" : "#9a6b3f";
-  const inner = tone === "gold" ? "#3d3518" : "#2a1f18";
+// ==========================================
+// THE LOADING TRANSITION COMPONENT
+// ==========================================
+function BootSequence({ onComplete }: { onComplete: () => void }) {
+  const [lines, setLines] = useState<string[]>([]);
+  const bootMessages = [
+    "> INITIATING SECURE CONNECTION...",
+    "> DECRYPTING BIOMETRIC DATA... [OK]",
+    "> LOADING CYBER-HELLENIC ENVIRONMENT...",
+    "> PROJECT 'AMANZOE' INITIALIZED.",
+    "> ACCESS GRANTED."
+  ];
+
+  useEffect(() => {
+    let currentLine = 0;
+    const interval = setInterval(() => {
+      if (currentLine < bootMessages.length) {
+        setLines(prev => [...prev, bootMessages[currentLine]]);
+        currentLine++;
+      } else {
+        clearInterval(interval);
+        setTimeout(onComplete, 400);
+      }
+    }, 250); 
+    return () => clearInterval(interval);
+  }, [onComplete]);
+
   return (
-    <svg viewBox="0 0 100 130" className="h-28 w-24 drop-shadow-[0_10px_28px_rgba(0,0,0,0.5)] md:h-32 md:w-28" aria-hidden>
-      <defs>
-        <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor={tone === "gold" ? "#fff8e7" : "#e8c4a0"} stopOpacity="0.35" />
-          <stop offset="100%" stopColor={tone === "gold" ? "#c9a227" : "#6b4423"} stopOpacity="0.2" />
-        </linearGradient>
-      </defs>
-      <path d="M32 118 L50 88 L68 118 Z" fill="#121214" />
-      <circle cx="50" cy="52" r="38" fill={inner} stroke={stroke} strokeWidth="5" />
-      <circle cx="50" cy="52" r="32" fill={`url(#${gid})`} opacity={0.5} />
-      <circle cx="50" cy="52" r="28" fill="none" stroke={stroke} strokeWidth="1.5" opacity={0.6} />
-      <text x="50" y="56" textAnchor="middle" fill="#e7e5e4" fontSize="14" fontWeight="700" fontFamily="system-ui">
-        {tone === "gold" ? "I" : "III"}
-      </text>
-    </svg>
+    <motion.div 
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, y: -50 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+      className="fixed inset-0 z-[100] flex flex-col justify-center bg-[#050505] p-8 sm:p-20 font-mono text-sm sm:text-base text-cyan-400"
+    >
+      <div className="max-w-2xl">
+        <div className="mb-4 text-emerald-500 animate-pulse">MK_OS // LOUNGE_ACCESS</div>
+        {lines.map((line, i) => (
+          <motion.div 
+            key={i} 
+            initial={{ opacity: 0, x: -10 }} 
+            animate={{ opacity: 1, x: 0 }}
+            className={i === bootMessages.length - 1 ? "text-emerald-400 mt-4" : "text-cyan-500/80"}
+          >
+            {line}
+          </motion.div>
+        ))}
+        <div className="mt-2 w-3 h-4 bg-cyan-400 animate-ping" />
+      </div>
+    </motion.div>
   );
 }
 
-function DigitalPhotoFrame() {
+// ==========================================
+
+function OperatorBiometrics() {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.78, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-      className="relative w-full max-w-[200px] shrink-0 [perspective:900px] md:max-w-[220px]"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: 0.2, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+      className="relative w-full max-w-[200px] shrink-0 md:max-w-[240px]"
     >
-      <div
-        className="origin-bottom [transform-style:preserve-3d]"
-        style={{ transform: "rotateX(8deg)" }}
-      >
-        <div
-          className="relative rounded-lg border border-amber-500/35 bg-[linear-gradient(145deg,#1a1814_0%,#0c0b09_100%)] p-2"
-          style={{
-            boxShadow:
-              "0 0 0 1px rgba(251,191,36,0.15), 0 0 40px rgba(245,180,90,0.28), 0 22px 56px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.06)",
-          }}
-        >
-          <div className="pointer-events-none absolute -inset-px rounded-lg bg-[linear-gradient(135deg,rgba(255,220,160,0.35),transparent_40%,rgba(255,200,120,0.15))] opacity-70 blur-[2px]" />
-          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md bg-[#050505] ring-1 ring-amber-900/50">
-            <Image
-              src={PROFILE_IMAGE_SRC}
-              alt={SITE_OWNER_NAME}
-              fill
-              sizes="(max-width:768px) 200px, 220px"
-              className="object-cover"
-              priority
-            />
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_55%,rgba(0,0,0,0.35)_100%)]" />
-          </div>
+      <div className="relative rounded-sm border border-cyan-500/40 bg-[#050505] p-2 shadow-[0_0_30px_rgba(34,211,238,0.15)] group">
+        <div className="absolute -left-[1px] -top-[1px] h-4 w-4 border-l-2 border-t-2 border-cyan-400" />
+        <div className="absolute -right-[1px] -top-[1px] h-4 w-4 border-r-2 border-t-2 border-cyan-400" />
+        <div className="absolute -bottom-[1px] -left-[1px] h-4 w-4 border-b-2 border-l-2 border-cyan-400" />
+        <div className="absolute -bottom-[1px] -right-[1px] h-4 w-4 border-b-2 border-r-2 border-cyan-400" />
+
+        <div className="relative aspect-[3/4] w-full overflow-hidden border border-cyan-900/50 bg-[#0a0a0c]">
+          <Image
+            src={PROFILE_IMAGE_SRC}
+            alt={SITE_OWNER_NAME}
+            fill
+            sizes="(max-width:768px) 200px, 240px"
+            className="object-cover opacity-80 mix-blend-luminosity transition-all duration-500 group-hover:mix-blend-normal group-hover:opacity-100"
+            priority
+          />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_55%,rgba(34,211,238,0.2)_100%)] mix-blend-overlay" />
+          <motion.div 
+            animate={{ top: ["-10%", "110%"] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
+            className="pointer-events-none absolute left-0 right-0 h-12 bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent border-b border-cyan-400/50"
+          />
         </div>
-        <p className="mt-2 text-center font-mono text-[0.5rem] uppercase tracking-[0.28em] text-amber-200/40">
-          Digital frame · v1
+      </div>
+      <div className="mt-3 text-center flex flex-col items-center gap-1">
+        <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 font-mono text-[0.55rem] uppercase tracking-widest border border-cyan-500/30">
+          ID: MK-375
+        </span>
+        <p className="font-mono text-[0.5rem] uppercase tracking-[0.28em] text-cyan-200/40">
+          Biometric Scan Confirmed
         </p>
       </div>
     </motion.div>
@@ -104,6 +142,7 @@ function DigitalPhotoFrame() {
 const springModal = { type: "spring" as const, damping: 28, stiffness: 320 };
 
 export function InnerSanctumExperience() {
+  const [isBooting, setIsBooting] = useState(true);
   const [cvOpen, setCvOpen] = useState(false);
   const reduceMotion = useReducedMotion();
 
@@ -114,9 +153,7 @@ export function InnerSanctumExperience() {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setCvOpen(false);
-      }
+      if (e.key === "Escape") setCvOpen(false);
     };
     window.addEventListener("keydown", onKey);
     return () => {
@@ -126,143 +163,155 @@ export function InnerSanctumExperience() {
   }, [cvOpen]);
 
   return (
-    <div className="relative min-h-dvh overflow-x-hidden bg-[#0b0907] text-zinc-100">
+    <div className="relative min-h-dvh overflow-x-hidden bg-[#050505] text-zinc-100">
+      
+      <AnimatePresence>
+        {isBooting && <BootSequence onComplete={() => setIsBooting(false)} />}
+      </AnimatePresence>
+
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_120%_90%_at_80%_-10%,rgba(255,190,120,0.18),transparent_55%),radial-gradient(ellipse_80%_70%_at_20%_30%,rgba(55,48,42,0.45),transparent_50%),radial-gradient(ellipse_100%_60%_at_50%_100%,rgba(18,16,14,0.95),#080706)]"
+        className="pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(rgba(34,211,238,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,black,transparent)]"
       />
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 opacity-[0.07] mix-blend-overlay bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.5%22/%3E%3C/svg%3E')]"
+        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_50%_0%,rgba(34,211,238,0.08),transparent_50%)]"
       />
+      
+      <div className="pointer-events-none fixed inset-0 z-0 opacity-10 mix-blend-screen grayscale contrast-150" style={{ filter: "hue-rotate(180deg) sepia(100%) hue-rotate(140deg) saturate(300%)" }}>
+        <Image 
+          src={AMANZOE_BG_SRC}
+          alt="Amanzoe Background"
+          fill
+          className="object-cover"
+        />
+      </div>
 
       <div className="fixed left-6 top-6 z-50 md:left-10 md:top-8">
         <BackToHubButton />
       </div>
 
-      <motion.div
-        className="relative z-[1] mx-auto flex min-h-dvh max-w-6xl flex-col px-5 pb-16 pt-20 md:px-10 md:pt-24"
-        initial={reduceMotion ? { scale: 1, opacity: 1 } : { scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: reduceMotion ? 0 : 1.15, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <header className="mb-8 text-center md:mb-10">
-          <p className="font-mono text-[0.58rem] uppercase tracking-[0.45em] text-amber-200/35">
-            Inner sanctum
-          </p>
-          <h1 className="mt-2 font-display text-2xl font-light text-stone-100 md:text-3xl">About me</h1>
-        </header>
-
-        <div className="relative flex flex-1 flex-col items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-xl border-[10px] border-[#1c1917] bg-[#0f0e0d] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.65),inset_0_0_0_1px_rgba(255,255,255,0.04)] md:p-10"
-          >
-            <div className="absolute left-2 top-2 h-3 w-3 border-l border-t border-amber-900/40" />
-            <div className="absolute right-2 top-2 h-3 w-3 border-r border-t border-amber-900/40" />
-            <div className="absolute bottom-2 left-2 h-3 w-3 border-b border-l border-amber-900/40" />
-            <div className="absolute bottom-2 right-2 h-3 w-3 border-b border-r border-amber-900/40" />
-            <p className="font-poster text-center text-[clamp(1.05rem,3.5vw,1.75rem)] font-bold uppercase leading-[1.12] tracking-[0.04em] text-[#f5f0e8] drop-shadow-[0_2px_24px_rgba(255,200,120,0.12)]">
-              If you want something really hard,
-              <br />
-              you will make it.
+      {!isBooting && (
+        <motion.div
+          className="relative z-[1] mx-auto flex min-h-dvh max-w-6xl flex-col px-5 pb-16 pt-20 md:px-10 md:pt-24"
+          initial={reduceMotion ? { scale: 1, opacity: 1 } : { scale: 1.05, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: reduceMotion ? 0 : 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <header className="mb-8 text-center md:mb-12">
+            <p className="font-mono text-[0.6rem] uppercase tracking-[0.45em] text-cyan-500/60 flex items-center justify-center gap-3">
+              <span className="w-8 h-px bg-cyan-500/40"></span>
+              Operator Profile
+              <span className="w-8 h-px bg-cyan-500/40"></span>
             </p>
-          </motion.div>
+            <h1 className="mt-3 font-display text-2xl font-light tracking-wider text-stone-100 md:text-3xl uppercase">
+              Michail Kokkinos
+            </h1>
+          </header>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.55, duration: 0.8 }}
-            className="mt-10 flex w-full max-w-3xl flex-wrap items-end justify-center gap-8 md:mt-14 md:gap-12"
-          >
-            {MEDALS.map((m, i) => (
-              <motion.div
-                key={m.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.65 + i * 0.1, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                className="flex flex-col items-center text-center"
-              >
-                <MedalIconSimple tone={m.tone} uid={m.id} />
-                <p className="mt-2 max-w-[9rem] font-mono text-[0.58rem] font-medium uppercase leading-snug tracking-[0.12em] text-amber-100/75">
-                  {m.title}
-                </p>
-                <p className="mt-1 max-w-[10rem] text-[0.65rem] leading-snug text-zinc-500">{m.detail}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <div className="relative mt-auto w-full pt-16 md:pt-24">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute bottom-0 left-1/2 h-[45%] min-h-[200px] w-[140%] max-w-none -translate-x-1/2 bg-[linear-gradient(180deg,rgba(12,12,14,0.2)_0%,#050506_40%)]"
-            />
-            <div
-              aria-hidden
-              className="absolute bottom-0 left-0 right-0 h-32 bg-[linear-gradient(to_top,rgba(0,0,0,0.85),transparent)] md:h-40"
-            />
+          <div className="relative flex flex-1 flex-col items-center">
+            
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full max-w-2xl border-l-4 border-emerald-500 bg-emerald-950/20 p-6 md:p-8 backdrop-blur-sm shadow-[0_0_30px_rgba(16,185,129,0.05)]"
+            >
+              <p className="font-mono text-[0.65rem] uppercase tracking-widest text-emerald-500/80 mb-3">
+                // Hellenic_Directive.exe
+              </p>
+              <p className="font-mono text-lg md:text-xl text-emerald-100 tracking-wide leading-relaxed">
+                "If you want something really hard, <br className="hidden sm:block" />
+                <span className="text-emerald-400 font-bold">you will make it.</span>"
+              </p>
+            </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.75, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-              className="relative z-[2] mx-auto w-full max-w-5xl [perspective:900px]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="mt-12 flex w-full max-w-4xl flex-col sm:flex-row justify-center gap-4 md:gap-6"
             >
-              <div className="relative mx-auto h-4 w-[108%] max-w-[720px] -translate-x-[4%] rounded-sm bg-[linear-gradient(90deg,#0a0a0c,#1a1a1f,#0a0a0c)] shadow-[0_-2px_0_rgba(255,255,255,0.04),0_8px_40px_rgba(0,0,0,0.8)]" />
-
-              <div className="relative -mt-1 flex flex-col items-center justify-center gap-10 px-2 md:flex-row md:items-end md:gap-8 lg:gap-12">
-                <DigitalPhotoFrame />
-
-                <div
-                  className="w-full max-w-[420px] shrink-0 origin-bottom [transform-style:preserve-3d] md:w-[min(420px,42vw)]"
-                  style={{ transform: "rotateX(6deg)" }}
+              {ENDURANCE_METRICS.map((m, i) => (
+                <motion.div
+                  key={m.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + i * 0.1, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  className={`flex-1 border p-5 ${m.tone === 'gold' ? 'border-amber-500/40 bg-amber-500/5' : 'border-cyan-500/30 bg-cyan-500/5'} backdrop-blur-md relative overflow-hidden`}
                 >
-                  <button
-                    type="button"
-                    onClick={() => setCvOpen(true)}
-                    className="group relative w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0907]"
-                    aria-label="Open full curriculum vitae"
-                  >
-                    <span className="pointer-events-none absolute -inset-3 rounded-lg bg-amber-400/0 blur-2xl transition-all group-hover:bg-amber-400/10" />
-                    <div className="overflow-hidden rounded-t-lg border border-zinc-700/80 bg-zinc-950 shadow-[0_24px_60px_rgba(0,0,0,0.85)]">
-                      <div className="border-b border-zinc-800 bg-black/80 px-3 py-1.5">
-                        <div className="mx-auto flex max-w-[200px] gap-1.5">
-                          <span className="h-2 w-2 rounded-full bg-red-500/80" />
-                          <span className="h-2 w-2 rounded-full bg-amber-400/80" />
-                          <span className="h-2 w-2 rounded-full bg-emerald-500/70" />
-                        </div>
-                      </div>
-                      <div className="relative min-h-[200px] bg-[#030708] px-3 py-4 sm:px-5 sm:py-6 md:min-h-[220px]">
-                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(34,211,238,0.12),transparent_65%)]" />
-                        <div className="relative flex min-h-[168px] flex-col items-center justify-center gap-1.5 px-1 text-center font-mono text-[0.5rem] leading-snug text-cyan-300/95 shadow-[inset_0_0_60px_rgba(34,211,238,0.08)] sm:gap-2 sm:text-[0.58rem] md:text-[0.62rem] md:leading-relaxed">
-                          {LAPTOP_LINES.map((line) => (
-                            <span key={line} className="block max-w-full break-words tracking-[0.06em]">
-                              {line}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="relative mt-3 text-center font-mono text-[0.5rem] text-cyan-600/60 sm:text-[0.55rem]">
-                          Click to open CV
-                        </p>
-                      </div>
-                    </div>
-                    <div className="h-3 rounded-b-lg border border-t-0 border-zinc-800 bg-[linear-gradient(180deg,#141418,#0a0a0c)] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]" />
-                  </button>
-                </div>
-              </div>
+                  <div className={`absolute top-0 right-0 w-16 h-16 opacity-10 ${m.tone === 'gold' ? 'bg-amber-500' : 'bg-cyan-500'} blur-2xl rounded-full`} />
+                  <p className={`font-mono text-[0.55rem] tracking-[0.2em] mb-2 ${m.tone === 'gold' ? 'text-amber-400' : 'text-cyan-400'}`}>
+                    {m.category}
+                  </p>
+                  <h3 className="font-display text-lg text-stone-100 tracking-wide mb-1">{m.title}</h3>
+                  <p className="text-xs text-zinc-400 font-mono">{m.detail}</p>
+                </motion.div>
+              ))}
             </motion.div>
+
+            <div className="relative mt-20 w-full pt-10">
+              <motion.div
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                className="relative z-[2] mx-auto w-full max-w-5xl [perspective:1000px]"
+              >
+                <div className="relative flex flex-col items-center justify-center gap-12 px-2 md:flex-row md:items-end md:gap-16">
+                  
+                  <OperatorBiometrics />
+
+                  <div
+                    className="w-full max-w-[460px] shrink-0 origin-bottom [transform-style:preserve-3d] md:w-[min(460px,45vw)]"
+                    style={{ transform: "rotateX(8deg)" }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setCvOpen(true)}
+                      className="group relative w-full cursor-pointer text-left focus:outline-none"
+                    >
+                      <div className="absolute -inset-4 bg-cyan-500/0 blur-2xl transition-all duration-500 group-hover:bg-cyan-500/10" />
+                      <div className="relative overflow-hidden rounded-t-xl border border-cyan-900/80 bg-zinc-950 shadow-[0_0_50px_rgba(34,211,238,0.1)] transition-all group-hover:border-cyan-500/50">
+                        <div className="border-b border-cyan-900/50 bg-[#050505] px-4 py-2 flex justify-between items-center">
+                          <div className="flex gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-red-500/50" />
+                            <span className="h-2 w-2 rounded-full bg-amber-500/50" />
+                            <span className="h-2 w-2 rounded-full bg-cyan-500/80 shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
+                          </div>
+                          <span className="font-mono text-[0.5rem] text-cyan-600 tracking-widest">DATA_LINK_SECURE</span>
+                        </div>
+                        <div className="relative min-h-[220px] bg-[#020608] px-4 py-6 md:min-h-[240px]">
+                          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_50%,rgba(34,211,238,0.08),transparent_70%)] pointer-events-none" />
+                          <div className="relative flex flex-col gap-2 font-mono text-[0.6rem] text-cyan-400/90 md:text-[0.65rem] md:leading-relaxed">
+                            {LAPTOP_LINES.map((line, idx) => (
+                              <span key={idx} className="block break-words">
+                                <span className="text-emerald-500 mr-2">&gt;</span>{line}
+                              </span>
+                            ))}
+                          </div>
+                          <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+                            <span className="px-4 py-1.5 border border-cyan-500/40 bg-cyan-500/10 text-cyan-300 font-mono text-[0.55rem] uppercase tracking-widest transition-all group-hover:bg-cyan-500/20 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+                              [ EXTRACT FULL CV ]
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="h-4 rounded-b-xl border border-t-0 border-cyan-900/50 bg-[linear-gradient(180deg,#0a0a0c,#050505)] shadow-[inset_0_1px_0_rgba(34,211,238,0.1)]" />
+                    </button>
+                  </div>
+
+                </div>
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
 
       <AnimatePresence>
         {cvOpen && (
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-labelledby="cv-panel-title"
             className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -271,31 +320,30 @@ export function InnerSanctumExperience() {
           >
             <button
               type="button"
-              className="absolute inset-0 bg-black/75 backdrop-blur-sm"
-              aria-label="Close CV"
+              className="absolute inset-0 bg-[#050505]/90 backdrop-blur-md"
               onClick={closeCv}
             />
             <motion.div
-              className="relative z-[1] m-0 flex max-h-[min(92vh,880px)] w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl border border-white/[0.08] bg-[#0e0e10] shadow-[0_-20px_80px_rgba(0,0,0,0.7)] sm:m-4 sm:rounded-2xl"
+              className="relative z-[1] m-0 flex max-h-[min(92vh,880px)] w-full max-w-2xl flex-col overflow-hidden rounded-t-xl border border-cyan-500/20 bg-[#0a0a0c] shadow-[0_0_80px_rgba(34,211,238,0.15)] sm:m-4 sm:rounded-xl"
               initial={{ y: "100%", opacity: 0.6 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "40%", opacity: 0 }}
               transition={springModal}
             >
-              <div className="flex items-center justify-between border-b border-white/[0.06] px-5 py-4 md:px-6">
-                <h2 id="cv-panel-title" className="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-zinc-500">
-                  Curriculum vitae
+              <div className="flex items-center justify-between border-b border-cyan-500/20 bg-cyan-950/30 px-5 py-4 md:px-6">
+                <h2 className="font-mono text-[0.65rem] uppercase tracking-[0.35em] text-cyan-500">
+                  Curriculum Vitae // MK-375
                 </h2>
                 <button
                   type="button"
                   onClick={closeCv}
-                  className="rounded-md px-3 py-1.5 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-zinc-500 transition-colors hover:bg-white/5 hover:text-zinc-300"
+                  className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-cyan-600 transition-colors hover:text-cyan-300"
                 >
-                  Close
+                  [ CLOSE ]
                 </button>
               </div>
-              <div className="overflow-y-auto px-5 py-6 md:px-8 md:py-8">
-                <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-zinc-300 [font-variant-numeric:tabular-nums]">
+              <div className="overflow-y-auto px-5 py-6 md:px-8 md:py-8 custom-scrollbar">
+                <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed text-cyan-100/80 [font-variant-numeric:tabular-nums]">
                   {INNER_SANCTUM_CV}
                 </pre>
               </div>
