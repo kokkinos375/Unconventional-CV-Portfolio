@@ -51,7 +51,7 @@ function BootSequence({ onComplete }: { onComplete: () => void }) {
     "> INITIATING SECURE CONNECTION...",
     "> DECRYPTING BIOMETRIC DATA... [OK]",
     "> LOADING CYBER-HELLENIC ENVIRONMENT...",
-    "> PROJECT 'AMANZOE' INITIALIZED.",
+    "> PROJECT 'LOUNGE' INITIALIZED.",
     "> ACCESS GRANTED."
   ];
 
