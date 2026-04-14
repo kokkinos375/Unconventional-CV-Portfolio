@@ -211,18 +211,18 @@ export function InnerSanctumExperience() {
 
           <div className="relative flex flex-1 flex-col items-center">
             
-            <motion.div
+          <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full max-w-2xl border-l-4 border-emerald-500 bg-emerald-950/20 p-6 md:p-8 backdrop-blur-sm shadow-[0_0_30px_rgba(16,185,129,0.05)]"
+              className="relative w-full max-w-lg border-l-4 border-emerald-500 bg-emerald-950/20 p-6 md:p-8 backdrop-blur-sm shadow-[0_0_30px_rgba(16,185,129,0.05)]"
             >
-              <p className="font-mono text-[0.65rem] uppercase tracking-widest text-emerald-500/80 mb-3">
+              <p className="font-mono text-[0.65rem] uppercase tracking-widest text-emerald-500/80 mb-4 text-left">
                 // Hellenic_Directive.exe
               </p>
-              <p className="font-mono text-lg md:text-xl text-emerald-100 tracking-wide leading-relaxed">
-                "If you want something really hard, <br className="hidden sm:block" />
-                <span className="text-emerald-400 font-bold">you will make it.</span>"
+              <p className="font-mono text-lg md:text-xl text-emerald-100 tracking-wide leading-relaxed text-center">
+                "A strong enough desire will, <br className="hidden sm:block" />
+                <span className="text-emerald-400 font-bold">inevitably lead to success.</span>"
               </p>
             </motion.div>
 
